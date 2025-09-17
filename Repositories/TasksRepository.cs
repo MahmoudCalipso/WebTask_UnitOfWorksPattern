@@ -1,12 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using WebTask.DTO;
 using WebTask.Entities;
 using WebTask.Interfaces;
 
 namespace WebTask.Repositories
 {
     public class TasksRepository : GenericRepository<Tasks>, ITasksRepository
-    {
-        public TasksRepository(DbTaskContext context) : base(context) { }
+    {    
+        private readonly IMapper _mapper;
+        public TasksRepository(DbTaskContext context, IMapper mapper) : base(context)
+        {
+            _mapper = mapper;
+        }
 
 
 
@@ -64,7 +70,7 @@ namespace WebTask.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Tasks>> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null)
+        public async Task<TasksListDto> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null)
         {
             var query = _dbSet.AsQueryable();
 
@@ -75,11 +81,24 @@ namespace WebTask.Repositories
                 query = query.Where(t => t.Priority == priority.Value);
             if (!string.IsNullOrWhiteSpace(Title))
                 query = query.Where(t => t.Title.Contains(Title) || t.Description.Contains(Title));
-            return await query
+            // Récupérer le nombre total d'éléments
+            var totalCount = await query.CountAsync();
+
+            // Récupérer les données paginées
+            var tasks = await query
                 .OrderBy(t => t.DueDate)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .AsNoTracking()
                 .ToListAsync();
+
+            return new TasksListDto
+            {
+                Tasks = _mapper.Map<List<TasksDto>>(tasks),
+                TotalCount = totalCount,
+                PageSize = pageSize,
+                CurrentPage = pageNumber
+            };
         }
 
         public async Task<Dictionary<EnumStatus, int>> GetTaskCountByStatusAsync()

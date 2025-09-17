@@ -1,4 +1,5 @@
-﻿using WebTask.Entities;
+﻿using WebTask.DTO;
+using WebTask.Entities;
 
 namespace WebTask.Interfaces
 {
@@ -10,7 +11,7 @@ namespace WebTask.Interfaces
         public Task<IEnumerable<Tasks>> GetTasksDueTodayAsync();
         public Task<IEnumerable<Tasks>> GetTasksByDateRangeAsync(DateTime startDate, DateTime endDate);
         public Task<IEnumerable<Tasks>> SearchTasksAsync(string searchTerm);
-        public Task<IEnumerable<Tasks>> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null);
+        public Task<TasksListDto> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null);
         public Task<Dictionary<EnumStatus, int>> GetTaskCountByStatusAsync();
         public Task<Dictionary<EnumPriority, int>> GetTaskCountByPriorityAsync();
         public Task SoftDeleteAsync(Guid id);

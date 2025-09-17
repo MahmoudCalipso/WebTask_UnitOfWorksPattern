@@ -69,10 +69,10 @@ namespace WebTask.Services
             return _mapper.Map<IEnumerable<TasksDto>>(tasks);
         }
 
-        public async Task<IEnumerable<TasksDto>> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null)
+        public async Task<TasksListDto> GetPaginatedTasksAsync(int pageNumber, int pageSize, EnumStatus? status = null, EnumPriority? priority = null, string? Title = null)
         {
             var tasks = await _unitOfWork.Tasks.GetPaginatedTasksAsync(pageNumber, pageSize, status, priority, Title);
-            return _mapper.Map<IEnumerable<TasksDto>>(tasks);
+            return tasks;
         }
 
         public async Task<TasksDto> GetTaskByIdAsync(Guid id)

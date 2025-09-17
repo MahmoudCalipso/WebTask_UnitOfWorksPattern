@@ -17,7 +17,7 @@ namespace WebTask.Controllers
         }
 
         [HttpGet("GetAllTasks")]
-        public async Task<ActionResult<IEnumerable<TasksDto>>> GetTasks(
+        public async Task<ActionResult<TasksListDto>> GetTasks(
         [FromQuery] EnumStatus? status = null,
         [FromQuery] EnumPriority? priority = null,
         [FromQuery] string? Title = null,

@@ -14,4 +14,12 @@ namespace WebTask.DTO
         public bool IsOverdue => DateTime.Now > DueDate && Status != EnumStatus.Completed;
         public int DaysUntilDue => (DueDate.Date - DateTime.Now.Date).Days;
     }
+
+    public class TasksListDto
+    {
+        public List<TasksDto> Tasks { get; set; }
+        public int TotalCount { get; set; }
+        public int PageSize { get; set; }
+        public int CurrentPage { get; set; }
+    }
 }

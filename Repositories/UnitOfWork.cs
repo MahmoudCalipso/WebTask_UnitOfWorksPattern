@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore.Storage;
 using WebTask.Entities;
 using WebTask.Interfaces;
 
@@ -9,11 +10,12 @@ namespace WebTask.Repositories
         private readonly DbTaskContext _context;
         private IDbContextTransaction _transaction;
         private bool _disposed = false;
-
-        public UnitOfWork(DbTaskContext context)
+        private readonly IMapper _mapper;
+        public UnitOfWork(DbTaskContext context , IMapper mapper)
         {
             _context = context;
-            Tasks = new TasksRepository(_context);
+            _mapper = mapper;
+            Tasks = new TasksRepository(_context, _mapper);
         }
 
         public ITasksRepository Tasks { get;}
